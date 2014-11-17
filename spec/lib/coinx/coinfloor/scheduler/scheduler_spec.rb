@@ -1,7 +1,6 @@
-require 'spec_helper'
-require_relative '../../../../../lib/coinx/coinfloor/scheduler/scheduler'
+require 'coinx/coinfloor/scheduler/scheduler'
 
-describe Scheduler do
+RSpec.describe Scheduler do
   it 'schedules the execution of a code block' do
     period_in_seconds = 0.3
     sleep_interval = 0.3 + 0.1
@@ -13,7 +12,7 @@ describe Scheduler do
     sleep(sleep_interval)
     expect(stub.counter).to eq(2)
   end
-end 
+end
 
 class BlockStub
 

@@ -1,7 +1,6 @@
-require 'spec_helper'
-require_relative '../../../../lib/coinx/coinfloor/coinfloor_client'
+require 'coinx/coinfloor/coinfloor_client'
 
-describe CoinfloorClient do
+RSpec.describe CoinfloorClient do
   it 'establish a websockets connection through a sand box' do
     domain = 'ws://api.coinfloor.co.uk'
 
@@ -16,7 +15,7 @@ describe CoinfloorClient do
     expect(ws).to receive(:on).with(:close).once
 
     CoinfloorClient.new(
-      sandbox: sandbox, 
+      sandbox: sandbox,
       websocket_factory: ws_factory
     ).run
   end
@@ -35,7 +34,7 @@ describe CoinfloorClient do
 
     CoinfloorClient.new(
       events_to_subscribe: events_to_subscribe,
-      sandbox: sandbox, 
+      sandbox: sandbox,
       websocket_factory: ws_factory,
       coinfloor_request: coinfloor_request
     ).run
@@ -56,7 +55,7 @@ describe CoinfloorClient do
     expect(event_dispatcher).to receive(:dispatch).with(message_content.downcase)
 
     CoinfloorClient.new(
-      sandbox: sandbox, 
+      sandbox: sandbox,
       websocket_factory: ws_factory,
       event_dispatcher: event_dispatcher
     ).run
@@ -72,7 +71,7 @@ describe CoinfloorClient do
     expect(scheduler).to receive(:every).with(keep_alive_period, keep_alive_unit)
 
     CoinfloorClient.new(
-      sandbox: sandbox, 
+      sandbox: sandbox,
       scheduler: scheduler
     ).run
   end
@@ -94,7 +93,7 @@ describe CoinfloorClient do
     allow(ws).to receive(:on).with(:close)
 
     CoinfloorClient.new(
-      sandbox: sandbox, 
+      sandbox: sandbox,
       websocket_factory: ws_factory,
       coinfloor_request: coinfloor_request,
       scheduler: scheduler

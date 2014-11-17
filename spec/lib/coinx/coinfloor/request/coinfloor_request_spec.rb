@@ -1,7 +1,6 @@
-require 'spec_helper'
-require_relative '../../../../../lib/coinx/coinfloor/request/coinfloor_request'
+require 'coinx/coinfloor/request/coinfloor_request'
 
-describe CoinfloorRequest do
+RSpec.describe CoinfloorRequest do
 
   before(:each) do
     @coinfloor_request = CoinfloorRequest.new
@@ -16,4 +15,4 @@ describe CoinfloorRequest do
     order_book = { method: 'WatchOrders', base: 63488, counter: 64032, watch: true }.to_json
     expect(@coinfloor_request.live_order_book).to eq(order_book)
   end
-end 
+end

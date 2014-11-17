@@ -1,8 +1,6 @@
-require 'spec_helper'
-require_relative '../../../../../lib/coinx/coinfloor/event/event_dispatcher'
+require 'coinx/coinfloor/event/event_dispatcher'
 
-describe EventDispatcher do
-
+RSpec.describe EventDispatcher do
   before(:each) do
     @event_factory = double('event_factory')
     @event_dispatcher = EventDispatcher.new(event_factory: @event_factory)
@@ -13,7 +11,7 @@ describe EventDispatcher do
     event = double('event')
     expect(event).to receive(:execute)
     expect(@event_factory).to receive(:create).with(message) { event }
-    
+
     @event_dispatcher.dispatch(message)
   end
 end

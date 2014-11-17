@@ -1,7 +1,6 @@
- require 'spec_helper'
-require_relative '../../../../../lib/coinx/coinfloor/event/event_factory'
+require 'coinx/coinfloor/event/event_factory'
 
-describe EventFactory do
+RSpec.describe EventFactory do
 
   before(:each) do
     @event_factory = EventFactory.new
