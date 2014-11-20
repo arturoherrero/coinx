@@ -1,19 +1,18 @@
 require_relative '../bitcoin_client'
-require_relative 'sandbox/sandbox'
-require_relative 'websockets/websockets'
-require_relative 'request/coinfloor_request'
 require_relative 'event/event_dispatcher'
-require_relative 'event/coinfloor_events'
+require_relative 'request/coinfloor_request'
+require_relative 'sandbox/sandbox'
 require_relative 'scheduler/scheduler'
+require_relative 'websockets/websockets'
 
 class CoinfloorClient < BitcoinClient
   def initialize(args)
-    @events_to_subsccribe = args.fetch(:events_to_subscribe) { [] }
-    @sandbox = args.fetch(:sandbox) { Sandbox.new }
-    @websocket_factory = args.fetch(:websocket_factory) { WebsocketFactory.new }
-    @request = args.fetch(:coinfloor_request) { CoinfloorRequest.new }
-    @event_dispatcher = args.fetch(:event_dispatcher) { EventDispatcher.new }
-    @scheduler = args.fetch(:scheduler) { Scheduler.new }
+    @events_to_subscribe = args.fetch(:events_to_subscribe) { [] }
+    @sandbox             = args.fetch(:sandbox) { Sandbox.new }
+    @websocket_factory   = args.fetch(:websocket_factory) { WebsocketFactory.new }
+    @request             = args.fetch(:coinfloor_request) { CoinfloorRequest.new }
+    @event_dispatcher    = args.fetch(:event_dispatcher) { EventDispatcher.new }
+    @scheduler           = args.fetch(:scheduler) { Scheduler.new }
   end
 
   def run
@@ -39,12 +38,12 @@ class CoinfloorClient < BitcoinClient
   end
 
   def subscribe
-    @events_to_subsccribe.each { |event_name| @ws.send(@request.send(event_name)) }
+    @events_to_subscribe.each { |event_name| @ws.send(@request.send(event_name)) }
   end
 
-  def keep_alive 
-    @scheduler.every(KEEP_ALIVE_PERIOD_IN_SECONDS, SchedulerUnits::seconds) do 
-      @ws.send(@request.keep_alive) 
+  def keep_alive
+    @scheduler.every(KEEP_ALIVE_PERIOD_IN_SECONDS, SchedulerUnits::seconds) do
+      @ws.send(@request.keep_alive)
     end
   end
 end

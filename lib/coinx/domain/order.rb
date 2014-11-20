@@ -1,7 +1,7 @@
 class Order
   def initialize(args)
     @currency = args.fetch(:currency)
-    @price = args.fetch(:price)
+    @price    = args.fetch(:price)
     @quantity = args.fetch(:quantity)
   end
 end

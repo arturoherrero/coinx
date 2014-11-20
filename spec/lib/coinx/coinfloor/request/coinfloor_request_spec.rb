@@ -1,10 +1,7 @@
 require 'coinx/coinfloor/request/coinfloor_request'
 
 RSpec.describe CoinfloorRequest do
-
-  before(:each) do
-    @coinfloor_request = CoinfloorRequest.new
-  end
+  subject(coinfloor_request) { CoinfloorRequest.new }
 
   it 'defines coinfloor keep alive request' do
     keep_alive = { method: 'KeepAlive' }.to_json
