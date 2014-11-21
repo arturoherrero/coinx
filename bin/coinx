@@ -4,10 +4,6 @@ require "bundler/setup"
 require "dotenv"; Dotenv.load
 require File.expand_path("../../lib/coinx/coinfloor/coinfloor_client", __FILE__)
 
-def bitcoin_client
-  CoinfloorClient.new(
-    events_to_subscribe: [CoinfloorEvents::live_order_book] 
-  )
-end
-
-bitcoin_client.run
+CoinfloorClient.new(
+  events_to_subscribe: [:live_order_book]
+).run

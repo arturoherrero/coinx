@@ -9,7 +9,7 @@ class EventFactory
     event_class(message).new(message)
   end
 
-  private 
+  private
 
   def event_class(message)
     events.find { |event| message.include?(event.name) }
