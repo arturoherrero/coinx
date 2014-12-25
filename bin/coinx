@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
-require "dotenv"; Dotenv.load
-require File.expand_path("../../lib/coinx/coinfloor/coinfloor_client", __FILE__)
+require 'bundler/setup'
+require 'dotenv'; Dotenv.load
+require File.expand_path('../coinx_client', __FILE__)
 
-CoinfloorClient.new(
-  events_to_subscribe: [:live_order_book]
-).run
+CoinXClient.new

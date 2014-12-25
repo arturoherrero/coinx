@@ -1,4 +1,21 @@
+require 'json'
+
 class BitcoinClient
+
+  def initialize(currency)
+    @currency = currency
+    @events   = { }
+  end
+
+  def execute(event)
+    action = @events[event.class] || noop
+    action.call JSON.parse(event.message)
+  end
+
+  def on(event)
+    @events.merge!(event)
+  end
+
   def run
     raise "Abstract method 'run' needs to be implemented"
   end
@@ -11,7 +28,9 @@ class BitcoinClient
     # TODO IMPLEMENT
   end
 
-  def set_order_changed_callback
-    # TODO IMPLEMENT
+  private
+
+  def noop
+    lambda { |event| }
   end
 end

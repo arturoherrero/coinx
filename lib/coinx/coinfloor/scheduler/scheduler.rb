@@ -1,7 +1,13 @@
 require 'rufus-scheduler'
-require_relative 'scheduler_units'
 
 class Scheduler
+
+  @seconds = 's'
+
+  class << self
+    attr_reader :seconds
+  end
+
   def initialize
     @scheduler = Rufus::Scheduler.new
   end

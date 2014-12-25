@@ -4,7 +4,7 @@ RSpec.describe EventFactory do
   subject(:event_factory) { EventFactory.new }
 
   it 'creates welcome event' do
-    message = 'welcome'
+    message = 'Welcome'
     event = Welcome.new(message)
     expect(event_factory.create(message)).to eq event
   end

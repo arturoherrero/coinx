@@ -6,7 +6,7 @@ RSpec.describe Scheduler do
     sleep_interval = 0.3 + 0.1
     stub = BlockStub.new
     scheduler = Scheduler.new
-    scheduler.every(period_in_seconds, SchedulerUnits::seconds) { stub.increment }
+    scheduler.every(period_in_seconds, Scheduler::seconds) { stub.increment }
     sleep(sleep_interval)
     expect(stub.counter).to eq(1)
     sleep(sleep_interval)

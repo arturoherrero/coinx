@@ -1,4 +1,5 @@
 require 'coinx/coinfloor/coinfloor_client'
+require 'coinx/coinfloor/coinfloor_currency'
 
 RSpec.describe CoinfloorClient do
   let(:domain)     { 'ws://api.coinfloor.co.uk' }
@@ -20,21 +21,22 @@ RSpec.describe CoinfloorClient do
   end
 
   it 'subscribes to topics of interest, once ws connection is opened' do
-    events_to_subscribe = [:live_order_book]
-    live_order_book_request = double
+    XBT = CoinfloorCurrency::XBT
+    GBP = CoinfloorCurrency::GBP
+    live_order_book_request = { method: 'WatchOrders', base: XBT, counter: GBP, watch: true }
 
     ws = WSStub.new(:open)
-    coinfloor_request = double
 
     expect(ws_factory).to receive(:create) { ws }
-    expect(coinfloor_request).to receive(:live_order_book) { live_order_book_request }
 
-    CoinfloorClient.new(
-      events_to_subscribe: events_to_subscribe,
+    client = CoinfloorClient.new(
+      currency: CoinfloorCurrency::GBP,
       sandbox: sandbox,
-      websocket_factory: ws_factory,
-      coinfloor_request: coinfloor_request
-    ).run
+      websocket_factory: ws_factory
+    )
+
+    client.on(OrderBook => { })
+    client.run
 
     expect(ws.request).to eq live_order_book_request
   end
@@ -42,18 +44,24 @@ RSpec.describe CoinfloorClient do
   it('reacts to ws events, once ws connection is established and subscription completed') do
     message_content = 'This is a message'
     message = MessageEventStub.new(message_content)
+    oder_book_event_received = false
 
     ws = WSStub.new(:message, message)
-    event_dispatcher = double
+    event_factory = double
 
     expect(ws_factory).to receive(:create) { ws }
-    expect(event_dispatcher).to receive(:dispatch).with(message_content.downcase)
+    expect(event_factory).to receive(:create).with(message_content) { OrderBook.new('{}') }
 
-    CoinfloorClient.new(
+    client = CoinfloorClient.new(
       sandbox: sandbox,
       websocket_factory: ws_factory,
-      event_dispatcher: event_dispatcher
-    ).run
+      event_factory: event_factory
+    )
+
+    client.on(OrderBook => lambda { |event| oder_book_event_received = true })
+    client.run
+
+    expect(oder_book_event_received).to eq true
   end
 
   it 'schedules a keep alive event, once ws connection is established' do
@@ -72,11 +80,9 @@ RSpec.describe CoinfloorClient do
 
   it 'sends keep alive event through the ws connection when time runs out' do
     scheduler = SchedulerStub.new
-    coinfloor_request = double('coinfloor_request')
-    keep_alive_request = double('keep_alive_request')
+    keep_alive_request = { method: 'KeepAlive' }
 
     expect(ws_factory).to receive(:create) { ws }
-    expect(coinfloor_request).to receive(:keep_alive) { keep_alive_request }
     expect(ws).to receive(:send).with(keep_alive_request).once
     allow(ws).to receive(:on).with(:open)
     allow(ws).to receive(:on).with(:message)
@@ -86,7 +92,6 @@ RSpec.describe CoinfloorClient do
     CoinfloorClient.new(
       sandbox: sandbox,
       websocket_factory: ws_factory,
-      coinfloor_request: coinfloor_request,
       scheduler: scheduler
     ).run
   end
@@ -110,6 +115,7 @@ class WSStub
   def initialize(event, message = '')
     @event = event
     @message = message
+    @request
   end
 
   def on(event, &block)

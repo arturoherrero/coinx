@@ -12,7 +12,7 @@ class EventFactory
   private
 
   def event_class(message)
-    events.find { |event| message.include?(event.name) }
+    events.find { |event| message.downcase.include?(event.name) }
   end
 
   def events
