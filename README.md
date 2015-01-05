@@ -1,5 +1,9 @@
 # CoinX
 
+[![Code Climate](https://codeclimate.com/github/arturoherrero/coinx/badges/gpa.svg)](https://codeclimate.com/github/arturoherrero/coinx)
+[![Test Coverage](https://codeclimate.com/github/arturoherrero/coinx/badges/coverage.svg)](https://codeclimate.com/github/arturoherrero/coinx)
+[![Build Status](https://travis-ci.org/arturoherrero/coinx.svg?branch=master)](https://travis-ci.org/arturoherrero/biteydown)
+
 Client to work with different Bitcoin Exchanges.
 
 ## TODO
